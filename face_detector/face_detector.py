@@ -18,7 +18,7 @@ if __name__ == "__main__":
     parser.add_argument("-p", "--protofile", default=PROTO_FILE, dest="proto_file", help="Prototxt file describing the face detection model.")
     parser.add_argument("-m", "--modelfile", default=MODEL_FILE, dest="model_file", help="Caffe model weights.")
     parser.add_argument("-c", "--confidence", default=0.5, dest="confidence", help="Minimum confidence before a detection is processed. Value has to be between 0 and 1.")
-    parser.add_argument("-b", "--blur", default=False, dest="blurring", help="Turn on or off blurring of detected faces.")
+    parser.add_argument("-b", "--blur", default=False, dest="blurring", action=argparse.BooleanOptionalAction, help="Turn on or off blurring of detected faces.")
     parser.add_argument("-d", "--display_bbox", default=True, dest="display", action=argparse.BooleanOptionalAction, help="Show or hide the bounding box on the video.")
     args = parser.parse_args()
     
