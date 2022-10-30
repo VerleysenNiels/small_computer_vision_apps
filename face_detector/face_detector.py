@@ -7,6 +7,7 @@ import time
 PROTO_FILE = "model/deploy.prototxt.txt"
 MODEL_FILE = "model/res10_300x300_ssd_iter_140000_fp16.caffemodel"
 MIN_CONFIDENCE = 0.6
+BLURRING = True
 
 if __name__ == "__main__":
     # Logging config
@@ -55,7 +56,19 @@ if __name__ == "__main__":
             # Get the bounding box
             bbox = detections[0, 0, i, 3:7] * np.array([width, height, width, height])
             (startX, startY, endX, endY) = bbox.astype("int")
-    
+            
+            # Blurring crashes on the negative numbers that sometimes come out of the prediction
+            startX = 0 if startX < 0 else startX
+            startY = 0 if startY < 0 else startY
+            endX = 0 if endX < 0 else endX
+            endY = 0 if endY < 0 else endY            
+            
+            if BLURRING:
+                # Add blurring over the faces
+                face = frame[startY:endY, startX:endX]
+                face = cv2.blur(face, (55, 55))
+                frame[startY:startY+face.shape[0], startX:startX+face.shape[1]] = face
+                
             # Draw the bounding box on the frame
             text = "{:.2f}%".format(confidence * 100)
             y = startY - 10 if startY - 10 > 10 else startY + 10
