@@ -1,20 +1,32 @@
 import cv2
 import logging
 import numpy as np
-import time
+import argparse
 
-# Temporarily have these hardcoded, later add them as arguments
+# Hardcoded paths to model files, used as default values by argument parser
 PROTO_FILE = "model/deploy.prototxt.txt"
 MODEL_FILE = "model/res10_300x300_ssd_iter_140000_fp16.caffemodel"
-MIN_CONFIDENCE = 0.6
-BLURRING = True
 
 if __name__ == "__main__":
     # Logging config
     logging.basicConfig(level=logging.INFO)
     
+    # Argument parsing
+    parser = argparse.ArgumentParser(
+        prog = "Face Detector",
+        description = "A script that opens webcam and detects faces, optionally it can also blur these faces to anonymize the data.")
+    parser.add_argument("-p", "--protofile", default=PROTO_FILE, dest="proto_file", help="Prototxt file describing the face detection model.")
+    parser.add_argument("-m", "--modelfile", default=MODEL_FILE, dest="model_file", help="Caffe model weights.")
+    parser.add_argument("-c", "--confidence", default=0.5, dest="confidence", help="Minimum confidence before a detection is processed. Value has to be between 0 and 1.")
+    parser.add_argument("-b", "--blur", default=False, dest="blurring", help="Turn on or off blurring of detected faces.")
+    parser.add_argument("-d", "--display_bbox", default=True, dest="display", action=argparse.BooleanOptionalAction, help="Show or hide the bounding box on the video.")
+    args = parser.parse_args()
+    
+    # Check arguments
+    assert args.confidence >= 0 and args.confidence < 1, "The confidence argument is a confidence value and should be between 0 and 1."
+    
     # Load in the face detector neural network that is included with 
-    network = cv2.dnn.readNetFromCaffe(PROTO_FILE, MODEL_FILE)
+    network = cv2.dnn.readNetFromCaffe(args.proto_file, args.model_file)
     
     # Set up a video stream
     webcam = cv2.VideoCapture(0, cv2.CAP_DSHOW)
@@ -50,7 +62,7 @@ if __name__ == "__main__":
             confidence = detections[0, 0, i, 2]
             
             # Don't look at detections with only a low confidence
-            if confidence < MIN_CONFIDENCE:
+            if confidence < args.confidence:
                 continue
             
             # Get the bounding box
@@ -63,22 +75,23 @@ if __name__ == "__main__":
             endX = 0 if endX < 0 else endX
             endY = 0 if endY < 0 else endY            
             
-            if BLURRING:
+            if args.blurring:
                 # Add blurring over the faces
                 face = frame[startY:endY, startX:endX]
                 face = cv2.blur(face, (55, 55))
                 frame[startY:startY+face.shape[0], startX:startX+face.shape[1]] = face
-                
-            # Draw the bounding box on the frame
-            text = "{:.2f}%".format(confidence * 100)
-            y = startY - 10 if startY - 10 > 10 else startY + 10
-            cv2.rectangle(frame, (startX, startY), (endX, endY), (0, 255, 0), 3)
-            cv2.putText(frame, text, (startX, y), cv2.FONT_HERSHEY_DUPLEX, 0.45, (0, 255, 0), 2)
+            
+            if args.display:    
+                # Draw the bounding box on the frame
+                text = "{:.2f}%".format(confidence * 100)
+                y = startY - 10 if startY - 10 > 10 else startY + 10
+                cv2.rectangle(frame, (startX, startY), (endX, endY), (0, 255, 0), 3)
+                cv2.putText(frame, text, (startX, y), cv2.FONT_HERSHEY_DUPLEX, 0.45, (0, 255, 0), 2)
         
         # Display the frame
-        cv2.imshow('frame', frame)
+        cv2.imshow("frame", frame)
         
-        # If the user presses 'q' the script ends
-        if cv2.waitKey(1) == ord('q'):
+        # If the user presses "q" the script ends
+        if cv2.waitKey(1) == ord("q"):
             break
                
