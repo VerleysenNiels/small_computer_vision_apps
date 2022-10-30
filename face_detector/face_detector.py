@@ -69,6 +69,16 @@ if __name__ == "__main__":
             bbox = detections[0, 0, i, 3:7] * np.array([width, height, width, height])
             (startX, startY, endX, endY) = bbox.astype("int")
             
+            # Increase the size of the bounding box a bit
+            # First determine the dimensions of the bounding box
+            # Then move the defining points with a percentage of this size
+            bbox_width = endX - startX
+            bbox_height = endY - startY
+            startX = round(startX - bbox_width * 0.1)
+            startY = round(startY - bbox_height * 0.1)
+            endX = round(endX + bbox_width * 0.1)
+            endY = round(endY + bbox_height * 0.1)
+            
             # Blurring crashes on the negative numbers that sometimes come out of the prediction
             startX = 0 if startX < 0 else startX
             startY = 0 if startY < 0 else startY
