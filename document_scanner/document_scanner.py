@@ -1,6 +1,9 @@
 import cv2
 import logging
 import numpy as np
+from skimage.filters import threshold_local
+
+from document_transform import document_transform
 
 IMAGE_PATH = "images/example.jpg"
 
@@ -34,11 +37,24 @@ if __name__ == "__main__":
         if len(approximate_contour) == 4:
             document_contour = approximate_contour
             break
+        
+    warped = document_transform(orig, document_contour.reshape(4, 2) * ratio)
+    ratio = warped.shape[0] / 750.0
+    width = int(warped.shape[1] / ratio)
+    height = int(warped.shape[0] / ratio)
+    warped = cv2.resize(warped, (width, height))
+    
+    # As a final step we can also recolor the warped image to have an even clearer scan
+    warped = cv2.cvtColor(warped, cv2.COLOR_BGR2GRAY)
+    thresholds = threshold_local(warped, 11, offset = 10, method = "gaussian")
+    recolored = (warped > thresholds).astype("uint8") * 255
     
     # Show the different steps of the process
     cv2.imshow("Image", image)
     cv2.imshow("Edges", edged)
     cv2.drawContours(image, [document_contour], -1, (0, 255, 0), 2)
     cv2.imshow("Outline", image)
+    cv2.imshow("Warped", warped)
+    cv2.imshow("Recolored", recolored)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
