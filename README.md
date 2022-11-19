@@ -28,3 +28,23 @@ options:
   -d, --display_bbox, --no-display_bbox
                         Show or hide the bounding box on the video. (default: True)
 ```
+
+## Document scanner
+A script that turns your camera into a document scanner. Pass an image of a document to the script and it will transform it as if you would have put it in a scanner.
+
+<img src="https://github.com/VerleysenNiels/small_computer_vision_apps/blob/master/document_scanner/images/result.PNG?raw=true" height="300">
+
+```
+usage: Document Scanner [-h] [-i IMAGE_PATH] [-r | --recolor | --no-recolor] [-s | --show_steps | --no-show_steps]
+
+A script that takes a picture of a document and transforms it as if you would have scanned the document.
+
+options:
+  -h, --help            show this help message and exit
+  -i IMAGE_PATH, --image IMAGE_PATH
+                        Image of the document to be scanned.
+  -r, --recolor, --no-recolor
+                        Turn on or off recoloring of the scanned document. (default: False)
+  -s, --show_steps, --no-show_steps
+                        Show the different steps taken by the scanner. (default: False)
+```
