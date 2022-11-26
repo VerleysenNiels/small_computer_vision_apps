@@ -48,3 +48,27 @@ options:
   -s, --show_steps, --no-show_steps
                         Show the different steps taken by the scanner. (default: False)
 ```
+
+## Object tracker
+A script that turns your camera into a simple object tracker. Tracking happens based on the configured colorrange of the object.
+
+<img src="https://github.com/VerleysenNiels/small_computer_vision_apps/blob/master/object_tracker/tracking.gif?raw=true" height="300">
+
+```
+usage: object_tracker [-h] [-i MIN_COLOR] [-a MAX_COLOR] [-l TRAIL_LENGTH] [-c TRAIL_COLOR]
+
+A script that uses the webcam to detects and track an object, based on the color.
+
+options:
+  -h, --help            show this help message and exit
+  -i MIN_COLOR, --mincolor MIN_COLOR
+                        First HSV value of the minimum color, the object with a color between min and max will be
+                        tracked.
+  -a MAX_COLOR, --maxcolor MAX_COLOR
+                        First HSV value of the maximum color, the object with a color between min and max will be
+                        tracked.
+  -l TRAIL_LENGTH, --traillength TRAIL_LENGTH
+                        Length of the trail to be drawn on the image. Pass zero as argument to turn off the trail.
+  -c TRAIL_COLOR, --trailcolor TRAIL_COLOR
+                        Color of the trail, can be either blue, green or red.
+```
