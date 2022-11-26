@@ -16,7 +16,7 @@ if __name__ == "__main__":
     
     # Argument parsing
     parser = argparse.ArgumentParser(
-        prog = "Document Scanner",
+        prog = "document_canner",
         description = "A script that takes a picture of a document and transforms it as if you would have scanned the document.")
     parser.add_argument("-i", "--image", default=IMAGE_PATH, dest="image_path", help="Image of the document to be scanned.")
     parser.add_argument("-r", "--recolor", default=False, dest="recolor", action=argparse.BooleanOptionalAction, help="Turn on or off recoloring of the scanned document.")

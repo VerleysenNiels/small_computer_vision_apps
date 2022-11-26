@@ -13,7 +13,7 @@ if __name__ == "__main__":
     
     # Argument parsing
     parser = argparse.ArgumentParser(
-        prog = "Face Detector",
+        prog = "face_detector",
         description = "A script that opens webcam and detects faces, optionally it can also blur these faces to anonymize the data.")
     parser.add_argument("-p", "--protofile", default=PROTO_FILE, dest="proto_file", help="Prototxt file describing the face detection model.")
     parser.add_argument("-m", "--modelfile", default=MODEL_FILE, dest="model_file", help="Caffe model weights.")
