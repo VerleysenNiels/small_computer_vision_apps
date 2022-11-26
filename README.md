@@ -11,7 +11,7 @@ Optionally a command can be given in order to blur all the faces in the video fe
 
 Help for this script:
 ```
-usage: Face Detector [-h] [-p PROTO_FILE] [-m MODEL_FILE] [-c CONFIDENCE] [-b | --blur | --no-blur] [-d | --display_bbox | --no-display_bbox]
+usage: face_detector [-h] [-p PROTO_FILE] [-m MODEL_FILE] [-c CONFIDENCE] [-b | --blur | --no-blur] [-d | --display_bbox | --no-display_bbox]
 
 A script that opens webcam and detects faces, optionally it can also blur these faces to anonymize the data.
 
@@ -35,7 +35,7 @@ A script that turns your camera into a document scanner. Pass an image of a docu
 <img src="https://github.com/VerleysenNiels/small_computer_vision_apps/blob/master/document_scanner/images/result.PNG?raw=true" height="300">
 
 ```
-usage: Document Scanner [-h] [-i IMAGE_PATH] [-r | --recolor | --no-recolor] [-s | --show_steps | --no-show_steps]
+usage: document_scanner [-h] [-i IMAGE_PATH] [-r | --recolor | --no-recolor] [-s | --show_steps | --no-show_steps]
 
 A script that takes a picture of a document and transforms it as if you would have scanned the document.
 
