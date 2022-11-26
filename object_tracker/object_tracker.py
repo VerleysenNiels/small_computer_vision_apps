@@ -1,8 +1,12 @@
 import cv2
 import logging
+from collections import deque
+from math import sqrt
 
-MIN_COLOR = (245, 182, 66)
-MAX_COLOR = (219, 252, 3)
+# COLORS IN HSV SPACE
+MIN_COLOR = (0, 100, 170)
+MAX_COLOR = (15, 255, 255)
+TRAIL_LENGTH = 10
 
 if __name__ == "__main__":
      # Logging config
@@ -19,6 +23,8 @@ if __name__ == "__main__":
     if not webcam.isOpened():
         logging.error("Could not open the webcam")
         exit()
+    
+    history = deque(maxlen=TRAIL_LENGTH)
     
     while True:
         # Get the next frame
@@ -43,6 +49,9 @@ if __name__ == "__main__":
         # Similar to the document scanner, find contours in the mask
         contours, _ = cv2.findContours(masked.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         
+        # We'll use this to remove old points when no detections are made anymore
+        added_a_point = False
+        
         # Let's find our tennisball
         center = None
         if len(contours) > 0:
@@ -59,7 +68,21 @@ if __name__ == "__main__":
             # If the radius is large enough we can draw the circle on the frame
             if radius > 10:
                 cv2.circle(frame, (int(x), int(y)), int(radius), (255, 0, 0), 2)
+                # Add this point to the history
+                history.appendleft(center)
+                added_a_point = True
+                
+        if not added_a_point and len(history) > 0:
+            history.pop()
 
+        # Draw a trail with the previous points
+        for i in range(1, len(history)):
+            if history[i - 1] is None or history[i] is None:
+                continue
+            # Draw a line from point to point, where the thickness gets thinner as the points are further in the past
+            thickness = int(sqrt(TRAIL_LENGTH / float(i + 1)) * 3)
+            cv2.line(frame, history[i - 1], history[i], (255, 0, 0), thickness)
+        
         # Display the frame
         cv2.imshow("frame", frame)
         
