@@ -18,7 +18,7 @@ if __name__ == "__main__":
     
     # Argument parsing
     parser = argparse.ArgumentParser(
-        prog = "Object tracker",
+        prog = "object_tracker",
         description = "A script that uses the webcam to detects and track an object, based on the color.")
     parser.add_argument("-i", "--mincolor", default=0, dest="min_color", help="First HSV value of the minimum color, the object with a color between min and max will be tracked.")
     parser.add_argument("-a", "--maxcolor", default=15, dest="max_color", help="First HSV value of the maximum color, the object with a color between min and max will be tracked.")
