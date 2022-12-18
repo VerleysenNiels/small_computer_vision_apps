@@ -1,9 +1,16 @@
 import cv2
 import logging
 
+FACE_CASCADE_PATH = "cascade_classifiers/haarcascade_frontalface_alt.xml"
+EYE_CASCADE_PATH = "cascade_classifiers/haarcascade_eye_tree_eyeglasses.xml"
+
 if __name__ == "__main__":
      # Logging config
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.DEBUG)
+    
+    # Set up Haar cascade classifiers (yes, I'm keeping it very basic)
+    face_classifier = cv2.CascadeClassifier(FACE_CASCADE_PATH)
+    eye_classifier = cv2.CascadeClassifier(EYE_CASCADE_PATH)
     
     # Set up a video stream
     webcam = cv2.VideoCapture(0, cv2.CAP_DSHOW)
@@ -25,6 +32,45 @@ if __name__ == "__main__":
         if not ret:
             logging.error("Unable to capture the next image")
             break 
+        
+        # The image should be in grayscale for the cascade classifiers
+        grayscale_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        
+        # Use face cascade classifier to find faces
+        faces = face_classifier.detectMultiScale(grayscale_frame, 1.1, 4)
+        
+        if len(faces):
+            # We take the biggest face as the main face
+            largest = 0
+            main_face = ()
+            for (x, y, width, height) in faces:
+                if width + height > largest:
+                    largest = width + height
+                    main_face = (x, y, width, height)
+            
+            # Process main_face
+            (x, y, width, height) = main_face
+            
+            # Crop the main face region from the image
+            face_image = frame[y:y+height, x:x+width]
+
+            # The image should be in grayscale for the cascade classifiers
+            face_gray = cv2.cvtColor(face_image, cv2.COLOR_BGR2GRAY)
+
+            # Detect the eyes in the face region
+            eyes = eye_classifier.detectMultiScale(face_gray, 1.1, 3)
+            
+            if len(eyes):               
+                logging.debug("Eye open")
+                    
+            else:
+                # Face found, but no eyes
+                logging.debug("Eyes closed")
+                cv2.putText(frame, "Eyes are closed!", (10, 10), cv2.FONT_HERSHEY_DUPLEX, 0.45, (0, 255, 0), 2)
+        else:
+            # No face found
+            logging.debug("No face found")
+                        
         
         # Display the frame
         cv2.imshow("frame", frame)
