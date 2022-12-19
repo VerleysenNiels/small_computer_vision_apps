@@ -1,12 +1,19 @@
 import cv2
 import logging
+import argparse
 
 FACE_CASCADE_PATH = "cascade_classifiers/haarcascade_frontalface_alt.xml"
 EYE_CASCADE_PATH = "cascade_classifiers/haarcascade_eye_tree_eyeglasses.xml"
 
 if __name__ == "__main__":
      # Logging config
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(level=logging.INFO)
+    
+    # Argument parsing
+    parser = argparse.ArgumentParser(
+        prog = "sleep_detector",
+        description = "A simple script that opens webcam, detects the main face in view and determines if the eyes are open or closed.")
+    args = parser.parse_args()
     
     # Set up Haar cascade classifiers (yes, I'm keeping it very basic)
     face_classifier = cv2.CascadeClassifier(FACE_CASCADE_PATH)
@@ -60,16 +67,12 @@ if __name__ == "__main__":
             # Detect the eyes in the face region
             eyes = eye_classifier.detectMultiScale(face_gray, 1.1, 3)
             
-            if len(eyes):               
-                logging.debug("Eye open")
-                    
-            else:
+            if not len(eyes):
                 # Face found, but no eyes
-                logging.debug("Eyes closed")
-                cv2.putText(frame, "Eyes are closed!", (10, 10), cv2.FONT_HERSHEY_DUPLEX, 0.45, (0, 255, 0), 2)
+                cv2.putText(frame, "Eyes are closed!", (10, 10), cv2.FONT_HERSHEY_DUPLEX, 0.75, (0, 0, 255), 2)
         else:
             # No face found
-            logging.debug("No face found")
+            cv2.putText(frame, "No face in view", (10, 10), cv2.FONT_HERSHEY_DUPLEX, 0.75, (0, 255, 0), 2)
                         
         
         # Display the frame
