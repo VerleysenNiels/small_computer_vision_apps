@@ -72,3 +72,17 @@ options:
   -c TRAIL_COLOR, --trailcolor TRAIL_COLOR
                         Color of the trail, can be either blue, green or red.
 ```
+
+## Sleep detector
+This is a very basic script that uses the camera to detect if the eyes of the main person in view are opened or closed. I do this using Haar cascade classifiers, which do an okay job. There are of course much better approaches, like using dlib to detect the facial landmarks and then computing a ratio of how open the eyes are. You can also of course use machine learning to determine if an eye is opened or closed. The goal of this repo was to only use opencv, so that is what I did.
+
+<img src="https://github.com/VerleysenNiels/small_computer_vision_apps/blob/master/sleep_detector/open_or_closed_eyes.gif?raw=true" height="300">
+
+```
+usage: sleep_detector [-h]
+
+A simple script that opens webcam, detects the main face in view and determines if the eyes are open or closed.
+
+options:
+  -h, --help  show this help message and exit
+```
