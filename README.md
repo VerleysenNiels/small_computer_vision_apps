@@ -52,7 +52,7 @@ options:
 ## Object tracker
 A script that turns your camera into a simple object tracker. Tracking happens based on the configured colorrange of the object.
 
-<img src="https://github.com/VerleysenNiels/small_computer_vision_apps/blob/master/object_tracker/tracking.gif?raw=true" height="300">
+<img src="https://github.com/VerleysenNiels/small_computer_vision_apps/blob/master/object_tracker/tracking_short.gif?raw=true" height="300">
 
 ```
 usage: object_tracker [-h] [-i MIN_COLOR] [-a MAX_COLOR] [-l TRAIL_LENGTH] [-c TRAIL_COLOR]
